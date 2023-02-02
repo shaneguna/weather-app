@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\FourSquareController;
 use App\Http\Controllers\API\OpenWeatherController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,5 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });*/
 
-Route::get('/test', [\App\Http\Controllers\API\FourSquareController::class, 'index']);
-//Route::get('/test-open', [\App\Http\Controllers\API\FourSquareController::class, 'index']);
+Route::get('/places', [FourSquareController::class, 'index']);
+Route::get('/weather-forecast', [OpenWeatherController::class, 'index']);

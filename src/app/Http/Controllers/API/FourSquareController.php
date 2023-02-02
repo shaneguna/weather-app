@@ -4,12 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\FourSquareSearchRequest;
 use App\Http\Services\FourSquareService;
+use App\Http\Services\Interfaces\FourSquareServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
-class FourSquareController
+final class FourSquareController
 {
-    private FourSquareService $fourSquareService;
+    private FourSquareServiceInterface $fourSquareService;
 
     public function __construct(FourSquareService $fourSquareService)
     {
@@ -22,10 +24,17 @@ class FourSquareController
      */
     public function index(Request $request): JsonResponse
     {
-        $searchDto = (new FourSquareSearchRequest())
-            ->setCity($request->get('city'))
-            ->setLimit($request->get('limit'));
+        try {
+            $searchDto = (new FourSquareSearchRequest())
+                ->setCity($request->get('city'));
 
-        return $this->fourSquareService->search($searchDto);
+            if ($request->has('limit') === true) {
+                $searchDto->setLimit($request->get('limit'));
+            }
+
+            return $this->fourSquareService->search($searchDto);
+        } catch (\Throwable $e) {
+            return response()->json(\sprintf('[ERROR] %s', $e->getMessage()), HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 }

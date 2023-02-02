@@ -2,26 +2,31 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Requests\OpenWeatherSearchRequest;
+use App\Http\Services\Interfaces\OpenWeatherServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 
-final class OpenWeatherService
+final class OpenWeatherService implements OpenWeatherServiceInterface
 {
-    protected const WEATHER_FORECAST_ENDPOINT = 'https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s';
+    protected const WEATHER_FORECAST_ENDPOINT = 'https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric';
 
     /**
-     * @param $params
-     * @return array|mixed|string
+     * @param OpenWeatherSearchRequest $request
+     * @return JsonResponse
      */
-    public function findByCity(string $city): JsonResource
+    public function findByCity(OpenWeatherSearchRequest $request): JsonResponse
     {
         $apiKey = \config('services.openWeather.apiKey');
-        $url = \sprintf(self::WEATHER_FORECAST_ENDPOINT, $city, $apiKey);
+        $url = \sprintf(self::WEATHER_FORECAST_ENDPOINT, $request->getCity(), $apiKey);
 
         try {
-            return (Http::get($url))->json();
+            $request = (Http::get($url))
+                ->json();
+
+            return response()->json($request);
         } catch (\Exception $e) {
-            return \sprintf('[ERROR] OpenWeather request failed: %s', $e->getMessage());
+            return response()->json(\sprintf('[ERROR] OpenWeather request failed: %s', $e->getMessage()));
         }
     }
 }

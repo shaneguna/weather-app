@@ -29,7 +29,7 @@ final class FourSquareApiTest extends TestCase
         $actual = (array) json_decode($response->getContent())->results ?? [];
 
         $response->assertStatus(200);
-        $this->assertCount(9, $actual);
+        $this->assertCount(10, $actual);
     }
 
     public function testGetPlacesFailsOnMissingParameters(): void

@@ -33,6 +33,7 @@ API integration and UI clearly exhibits the following:
 ````
 % docker-compose up --build
 % docker-compose run --rm composer install
+% docker-compose run --rm npm install
 % docker-compose run --rm --service-ports npm run dev
 ````
 

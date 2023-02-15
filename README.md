@@ -1,5 +1,5 @@
 <!-- ABOUT THE PROJECT  -->
-##### Time spent: 5 hours
+
 # About The Project
 
 Simple and easy-to-use weather app that display's weather information and places to hang out in.
